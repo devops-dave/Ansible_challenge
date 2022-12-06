@@ -1,4 +1,5 @@
-- name: cron module demo 
+---
+- name: module demo 
   hosts: localhost
   become: yes
   tasks: 
@@ -15,57 +16,12 @@
         month: "*"  
         job: 'logger "nauticus"' 
 
-    - name: Updates packages
-      become: yes
-      become_method: sudo
-      cron:
-        name: "update"
-        user: "ubuntu"
-        weekday: "1-7"
-        minute: "0"
-        hour: "19"
-        job: "/usr/bin/apt update -q -y"
-        state: present
+    - name: apt-get update
+      apt:
+        update-cache: yes
+      changed_when: 0
 
-    #
-    # Add upgrade cron
-    #
-    - name: Upgrades packages 
-      become: yes
-      become_method: sudo
-      cron:
-        name: "upgrade"
-        user: "ubuntu"
-        weekday: "1-7"
-        minute: "0"
-        hour: "20"
-        job: "/usr/bin/apt upgrade -q -y"
-        state: present
+    - name: installs Htop
+      command: apt install htop
 
-    #
-    # Add autoclean cron
-    #
-    - name: Autoclean packages
-      become: yes
-      become_method: sudo
-      cron:
-        name: "autoclean"
-        user: "ubuntu"
-        weekday: "1-7"
-        minute: "0"
-        hour: "23"
-        job: "/usr/bin/apt autoclean"
-        state: present
-
-     #
-    # Adds htop
-    #
-    - name: Install Htop
-      become: yes
-      become_method: sudo
-      cron:
-        name: "htopinstall"
-        special_time: "monthly"  
-        user: "ubuntu"
-        job: "/usr/bin/apt install htop"
-        state: present
+    
